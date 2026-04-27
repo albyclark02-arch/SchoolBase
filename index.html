@@ -312,8 +312,26 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
 #notif-banner.show{display:flex}
 #notif-dismiss{background:none;border:none;cursor:pointer;color:var(--acc);font-size:16px;margin-left:auto;padding:0 4px;font-family:var(--font)}
 
-/* DARK/LIGHT QUICK TOGGLE */
-#dark-toggle{font-size:15px}
+/* ── PLAYFUL ELEMENTS ── */
+@keyframes wiggle{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes rainbow{0%{color:#e05c5c}16%{color:#e07c3a}33%{color:#d4a820}50%{color:#5aac50}66%{color:#3aabab}83%{color:#5c7be0}100%{color:#e05c5c}}
+.hw-check:not(.checked):hover{animation:wiggle .3s ease}
+.hw-check.checked{animation:pop .2s ease}
+#streak-bar:hover #streak-text{animation:rainbow 1s linear infinite}
+.subj-dot{transition:transform .15s}
+.subj-item:hover .subj-dot{animation:pop .3s ease;transform:scale(1.3)}
+.nav-tab:hover span:first-child{display:inline-block;animation:wiggle .3s ease}
+/* fun hover on add button */
+#add-hw-btn:active{transform:scale(.96)}
+/* Playful empty states */
+.e-icon{animation:float 3s ease-in-out infinite}
+/* Card pop on add */
+@keyframes slideInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hw-card{animation:slideInUp .2s ease}
+/* Streak fire wiggle */
+#streak-bar span:first-child{display:inline-block;animation:wiggle 2s ease-in-out infinite}
 
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -398,10 +416,16 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
     </div>
     <div id="timer-panel">
       <div class="timer-mode-btns">
-        <button class="timer-mode-btn active" data-mins="25">Pomodoro 25m</button>
-        <button class="timer-mode-btn" data-mins="10">Short 10m</button>
-        <button class="timer-mode-btn" data-mins="5">Break 5m</button>
-        <button class="timer-mode-btn" data-mins="15">Break 15m</button>
+        <button class="timer-mode-btn active" data-mins="25">🍅 Pomodoro 25m</button>
+        <button class="timer-mode-btn" data-mins="10">⚡ Quick 10m</button>
+        <button class="timer-mode-btn" data-mins="5">☕ Break 5m</button>
+        <button class="timer-mode-btn" data-mins="15">🌿 Break 15m</button>
+        <button class="timer-mode-btn" data-mins="custom" id="custom-timer-btn">✏️ Custom</button>
+      </div>
+      <div id="custom-timer-row" style="display:none;align-items:center;gap:10px;justify-content:center">
+        <input type="number" id="custom-mins" min="1" max="180" placeholder="min" style="width:70px;font-size:22px;font-weight:700;text-align:center;padding:6px;border:1.5px solid var(--border2);border-radius:8px;background:var(--bg3);color:var(--txt);font-family:var(--font)"/>
+        <span style="font-size:14px;color:var(--txt2)">minutes</span>
+        <button class="timer-btn start" id="custom-set-btn" style="height:36px;padding:0 16px;font-size:13px">Set</button>
       </div>
       <select class="timer-task-sel" id="timer-task-sel"><option value="">— Link to a task (optional) —</option></select>
       <div class="timer-circle">
@@ -418,7 +442,7 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
         <button class="timer-btn reset" id="timer-reset">Reset</button>
         <button class="timer-btn start" id="timer-start">Start</button>
       </div>
-      <div class="timer-sessions">Sessions today: <span id="timer-sessions">0</span></div>
+      <div class="timer-sessions">Sessions today: <span id="timer-sessions">0</span> 🔥</div>
     </div>
   </main>
 </div>
@@ -591,30 +615,10 @@ document.getElementById('dark-toggle').onclick=()=>{
   saveTheme();applyTheme(themeStore);
 };
 
-// App name
+// App name display
 document.getElementById('app-name-display').textContent=appName;
-document.getElementById('nav-brand').onclick=()=>openSettingsModal();
-document.getElementById('settings-btn').onclick=()=>openSettingsModal();
-function openSettingsModal(){
-  showModal(`<div class="modal-title">⚙️ App Settings</div>
-    <div class="modal-field">
-      <label class="modal-label">App Name</label>
-      <input class="modal-input" type="text" id="an-input" value="${escH(appName)}" placeholder="SchoolBase"/>
-      <div class="app-name-preview" id="an-preview">${escH(appName)}</div>
-    </div>
-    <div class="modal-btns"><button class="modal-btn" id="an-c">Cancel</button><button class="modal-btn primary" id="an-s">Save</button></div>`);
-  const inp=document.getElementById('an-input');inp.focus();inp.select();
-  inp.addEventListener('input',()=>{document.getElementById('an-preview').textContent=inp.value||'SchoolBase';});
-  document.getElementById('an-c').onclick=closeModal;
-  document.getElementById('an-s').onclick=()=>{
-    const n=inp.value.trim()||'SchoolBase';
-    appName=n;store('hw_appname',appName);
-    document.getElementById('app-name-display').textContent=appName;
-    document.title=appName;
-    closeModal();showToast('✓ Name updated');
-  };
-}
-document.title=appName;
+document.getElementById('nav-brand').onclick=()=>{};
+document.getElementById('settings-btn').onclick=()=>openThemePicker();
 
 // Theme picker
 document.getElementById('theme-btn').onclick=openThemePicker;
@@ -749,7 +753,7 @@ function renderSidebar(){
   list.querySelectorAll('.subj-item[data-sid]').forEach(el=>{
     el.addEventListener('click',e=>{if(e.target.closest('[data-rename],[data-del]'))return;activeSubject=el.dataset.sid;renderAll();document.getElementById('sidebar').classList.remove('mob-open');document.getElementById('sidebar-overlay').classList.remove('show');});
   });
-  list.querySelectorAll('[data-rename]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();openRenameSubject(el.dataset.rename);}));
+  list.querySelectorAll('[data-rename]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();openAddSubjectModal(el.dataset.rename);}));
   list.querySelectorAll('[data-del]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();confirmDeleteSubject(el.dataset.del);}));
   updateStreak();
 }
@@ -762,25 +766,81 @@ function confirmDeleteSubject(sid){
   document.getElementById('mc').onclick=closeModal;
   document.getElementById('md').onclick=()=>{subjects=subjects.filter(x=>x.id!==sid);tasks=tasks.filter(t=>t.subjectId!==sid);if(activeSubject===sid)activeSubject='all';saveAll();closeModal();renderAll();};
 }
-function openRenameSubject(sid){
-  const s=subjects.find(x=>x.id===sid);
-  showModal(`<div class="modal-title">Rename Subject</div>
-    <div class="modal-field"><label class="modal-label">Name</label><input class="modal-input" type="text" id="rn" value="${escH(s.name)}"/></div>
-    <div class="modal-btns"><button class="modal-btn" id="rc">Cancel</button><button class="modal-btn primary" id="rs">Save</button></div>`);
-  const inp=document.getElementById('rn');inp.focus();inp.select();
-  document.getElementById('rc').onclick=closeModal;
-  document.getElementById('rs').onclick=()=>{const n=inp.value.trim();if(!n)return;s.name=n;saveAll();closeModal();renderAll();};
-}
-function openAddSubjectModal(){
-  let sel=SC[subjects.length%SC.length];
-  showModal(`<div class="modal-title">New Subject</div>
-    <div class="modal-field"><label class="modal-label">Name</label><input class="modal-input" type="text" id="sn" placeholder="e.g. History…"/></div>
-    <div class="modal-field"><label class="modal-label">Colour</label><div class="color-row" id="cr">${SC.map(c=>`<div class="cswatch${c===sel?' sel':''}" style="background:${c}" data-c="${c}"></div>`).join('')}</div></div>
-    <div class="modal-btns"><button class="modal-btn" id="sc">Cancel</button><button class="modal-btn primary" id="ss">Add Subject</button></div>`);
+// openRenameSubject merged into openAddSubjectModal above
+function openAddSubjectModal(editSid){
+  const isEdit=!!editSid;
+  const existing=isEdit?subjects.find(x=>x.id===editSid):null;
+  let selH=isEdit?hexToHsl(existing.color).h:200;
+  let selS=isEdit?hexToHsl(existing.color).s:70;
+  let selL=isEdit?hexToHsl(existing.color).l:50;
+  function previewHex(){return hslHex(selH,selS,selL)}
+
+  showModal(`<div class="modal-title">${isEdit?'Edit Subject':'New Subject'}</div>
+    <div class="modal-field"><label class="modal-label">Name</label><input class="modal-input" type="text" id="sn" placeholder="e.g. History…" value="${isEdit?escH(existing.name):''}"/></div>
+    <div class="modal-field">
+      <label class="modal-label">Colour</label>
+      <div class="spectrum-wrap" style="margin-top:4px">
+        <div class="spectrum-row">
+          <span class="spectrum-label">Hue</span>
+          <div class="spectrum-track" id="sh-track" style="background:linear-gradient(to right,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000)"><div class="spectrum-thumb" id="sh-thumb"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Saturation</span>
+          <div class="spectrum-track" id="ss-track"><div class="spectrum-thumb" id="ss-thumb"></div></div>
+        </div>
+        <div class="spectrum-row">
+          <span class="spectrum-label">Lightness</span>
+          <div class="spectrum-track" id="sl-track"><div class="spectrum-thumb" id="sl-thumb"></div></div>
+        </div>
+        <div id="subj-color-preview" style="height:36px;border-radius:8px;margin-top:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;transition:background .15s"></div>
+      </div>
+    </div>
+    <div class="modal-btns"><button class="modal-btn" id="sc">Cancel</button><button class="modal-btn primary" id="ss">${isEdit?'Save':'Add Subject'}</button></div>`);
+
   const inp=document.getElementById('sn');inp.focus();
+
+  function updateSubjPreview(){
+    const hex=previewHex();
+    const prev=document.getElementById('subj-color-preview');
+    prev.style.background=hexRgba(hex,.2);prev.style.color=hex;prev.style.border=`1.5px solid ${hexRgba(hex,.4)}`;
+    prev.textContent=hex.toUpperCase();
+    document.getElementById('ss-track').style.background=`linear-gradient(to right,${hslHex(selH,0,selL)},${hslHex(selH,100,selL)})`;
+    document.getElementById('sl-track').style.background=`linear-gradient(to right,${hslHex(selH,selS,0)},${hslHex(selH,selS,50)},${hslHex(selH,selS,100)})`;
+    document.getElementById('sh-thumb').style.left=(selH/360*100)+'%';
+    document.getElementById('ss-thumb').style.left=selS+'%';
+    document.getElementById('sl-thumb').style.left=selL+'%';
+  }
+
+  function makeDrag(tid,thid,onVal){
+    const track=document.getElementById(tid),thumb=document.getElementById(thid);
+    function set(e){const rect=track.getBoundingClientRect();const cx=e.touches?e.touches[0].clientX:e.clientX;onVal(Math.min(1,Math.max(0,(cx-rect.left)/rect.width)));updateSubjPreview();}
+    thumb.addEventListener('mousedown',e=>{e.preventDefault();const mm=ev=>set(ev);const mu=()=>{document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu)};document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);});
+    track.addEventListener('click',set);
+    thumb.addEventListener('touchstart',e=>{const tm=ev=>{e.preventDefault();set(ev)};const tu=()=>{document.removeEventListener('touchmove',tm);document.removeEventListener('touchend',tu)};document.addEventListener('touchmove',tm,{passive:false});document.addEventListener('touchend',tu);});
+  }
+  makeDrag('sh-track','sh-thumb',p=>{selH=Math.round(p*360)});
+  makeDrag('ss-track','ss-thumb',p=>{selS=Math.round(p*100)});
+  makeDrag('sl-track','sl-thumb',p=>{selL=Math.round(p*100)});
+
   document.getElementById('sc').onclick=closeModal;
-  document.querySelectorAll('#cr .cswatch').forEach(sw=>sw.addEventListener('click',()=>{sel=sw.dataset.c;document.querySelectorAll('#cr .cswatch').forEach(x=>x.classList.remove('sel'));sw.classList.add('sel');}));
-  document.getElementById('ss').onclick=()=>{const n=inp.value.trim();if(!n)return;subjects.push({id:'s'+uid(),name:n,color:sel});saveAll();closeModal();renderAll();};
+  document.getElementById('ss').onclick=()=>{
+    const n=inp.value.trim();if(!n)return;
+    const hex=previewHex();
+    if(isEdit){existing.name=n;existing.color=hex;}
+    else{subjects.push({id:'s'+uid(),name:n,color:hex});}
+    saveAll();closeModal();renderAll();
+  };
+  updateSubjPreview();
+}
+
+// helper: hex to hsl approx
+function hexToHsl(hex){
+  let r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;
+  const max=Math.max(r,g,b),min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){h=s=0;}
+  else{const d=max-min;s=l>0.5?d/(2-max-min):d/(max+min);switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}}
+  return{h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};
 }
 
 // ════ TASKS ════
@@ -842,7 +902,10 @@ function renderContent(){
     const ug=f.filter(t=>t.dueDate===todayStr()||t.dueDate===tomorrowStr());
     const wk=f.filter(t=>daysUntil(t.dueDate)>1&&daysUntil(t.dueDate)<=7);
     const lt=f.filter(t=>daysUntil(t.dueDate)>7);
-    if(!f.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">📭</div><div class="e-title">${searchQ?'No tasks match':'No tasks yet'}</div><div class="e-sub">${searchQ?'Try a different term':'Click "+ Add Homework" above'}</div></div>`;bindCards();return;}
+    if(!f.length){
+      const quotes=["You're all caught up! Go touch grass 🌱","Nothing here — enjoy the peace 🧘","All done! Treat yourself 🍕","Free time unlocked 🎮","Your future self is proud of you ✨"];
+      const q=quotes[Math.floor(Math.random()*quotes.length)];
+      area.innerHTML=`<div class="empty-state"><div class="e-icon">📭</div><div class="e-title">${searchQ?'No tasks match your search':'No tasks yet!'}</div><div class="e-sub">${searchQ?'Try a different search term':q}</div></div>`;bindCards();return;}
     let h='';
     if(ov.length)h+=section('🔴 Overdue',ov.length,ov.map(taskCard).join(''));
     if(ug.length)h+=section('⚡ Due Very Soon',ug.length,ug.map(taskCard).join(''));
@@ -850,7 +913,7 @@ function renderContent(){
     if(lt.length)h+=section('📆 Upcoming',lt.length,lt.map(taskCard).join(''));
     area.innerHTML=h;
   }else if(activeTab==='today'){
-    if(!f.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">🎉</div><div class="e-title">All clear!</div><div class="e-sub">Nothing due today or tomorrow.</div></div>`;bindCards();return;}
+    if(!f.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">🎉</div><div class="e-title">All clear today!</div><div class="e-sub">Nothing due today or tomorrow — you're a legend 🏆</div></div>`;bindCards();return;}
     const td=f.filter(t=>t.dueDate===todayStr()),tm=f.filter(t=>t.dueDate===tomorrowStr());
     let h='';
     if(td.length)h+=section('Due Today',td.length,td.map(taskCard).join(''));
@@ -966,6 +1029,10 @@ function renderAverages(){
 // ════ ADD DRAWER ════
 function openDrawer(){
   document.getElementById('d-subj').innerHTML=subjects.map(s=>`<option value="${s.id}">${escH(s.name)}</option>`).join('');
+  // Pre-select the currently active subject if one is selected
+  if(activeSubject!=='all'){
+    document.getElementById('d-subj').value=activeSubject;
+  }
   document.getElementById('d-title').value='';
   document.getElementById('d-date').value=todayStr();
   document.getElementById('d-assess').checked=false;
@@ -1109,6 +1176,7 @@ document.getElementById('cal-add-event-btn').onclick=()=>openAddCalEventModal();
 
 // ════ POMODORO TIMER ════
 const CIRC=678.6;
+const FOCUS_QUOTES=["You've got this! 💪","Stay focused, legend! 🌟","One task at a time ✨","Big brain time 🧠","You're crushing it! 🚀","Eyes on the prize 🏆","Let's gooo! 🔥","Deep work mode activated 🎯","Future you says thanks 👊","Absolute unit of focus 💎"];
 function timerFmt(s){return`${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
 function updateTimerDisplay(){
   document.getElementById('timer-display').textContent=timerFmt(timerSecondsLeft);
@@ -1120,12 +1188,34 @@ function setTimerMode(mins){
   timerMins=mins;
   if(timerRunning){clearInterval(timerInterval);timerInterval=null;timerRunning=false;document.getElementById('timer-start').textContent='Start';document.getElementById('timer-start').className='timer-btn start';}
   timerSecondsLeft=mins*60;timerTotalSeconds=mins*60;
-  document.getElementById('timer-label').textContent=mins<=5?'Break time':mins<=15?'Short break':'Focus time';
+  document.getElementById('timer-label').textContent=mins<=5?'Break time 😌':mins<=15?'Short break ☕':FOCUS_QUOTES[Math.floor(Math.random()*FOCUS_QUOTES.length)];
   document.getElementById('timer-display').textContent=timerFmt(timerSecondsLeft);
-  document.querySelectorAll('.timer-mode-btn').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.mins)===mins));
+  document.querySelectorAll('.timer-mode-btn:not(#custom-timer-btn)').forEach(b=>b.classList.toggle('active',parseInt(b.dataset.mins)===mins));
   updateTimerDisplay();
 }
-document.querySelectorAll('.timer-mode-btn').forEach(b=>b.addEventListener('click',()=>setTimerMode(parseInt(b.dataset.mins))));
+
+// Custom timer toggle
+document.getElementById('custom-timer-btn').addEventListener('click',()=>{
+  const row=document.getElementById('custom-timer-row');
+  const showing=row.style.display==='flex';
+  row.style.display=showing?'none':'flex';
+  document.getElementById('custom-timer-btn').classList.toggle('active',!showing);
+  if(!showing)setTimeout(()=>document.getElementById('custom-mins').focus(),50);
+});
+document.getElementById('custom-set-btn').onclick=()=>{
+  const v=parseInt(document.getElementById('custom-mins').value);
+  if(isNaN(v)||v<1||v>180){showToast('⚠️ Enter 1–180 minutes');return;}
+  document.getElementById('custom-timer-row').style.display='none';
+  setTimerMode(v);
+  showToast(`⏱ Custom timer: ${v} min`);
+};
+document.getElementById('custom-mins').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('custom-set-btn').click();});
+
+document.querySelectorAll('.timer-mode-btn:not(#custom-timer-btn)').forEach(b=>b.addEventListener('click',()=>{
+  document.getElementById('custom-timer-row').style.display='none';
+  document.getElementById('custom-timer-btn').classList.remove('active');
+  setTimerMode(parseInt(b.dataset.mins));
+}));
 document.getElementById('timer-reset').onclick=()=>setTimerMode(timerMins);
 document.getElementById('timer-start').onclick=()=>{
   if(timerRunning){
@@ -1140,14 +1230,13 @@ document.getElementById('timer-start').onclick=()=>{
       if(timerSecondsLeft<=0){
         clearInterval(timerInterval);timerInterval=null;timerRunning=false;
         document.getElementById('timer-start').textContent='Start';document.getElementById('timer-start').className='timer-btn start';
-        // count session
         const td=todayStr();
         if(timerSessions.date!==td){timerSessions={date:td,count:0};}
         timerSessions.count++;store('hw_timer_sessions_today',timerSessions);
         document.getElementById('timer-sessions').textContent=timerSessions.date===td?timerSessions.count:0;
-        showToast('🎉 Session complete!');
-        // browser notification if permitted
-        if(Notification&&Notification.permission==='granted'){new Notification('SchoolBase — Session complete!',{body:timerMins<=5?'Break over! Back to work.':'Great focus session! Take a break.',icon:''});}
+        launchConfetti();
+        showToast('🎉 Session complete! Amazing work!');
+        if(Notification&&Notification.permission==='granted'){new Notification('SchoolBase — Session complete!',{body:timerMins<=5?'Break over! Back to work 💪':'Great focus session! Take a break ☕'});}
       }
     },1000);
   }
@@ -1156,7 +1245,6 @@ function populateTimerTasks(){
   const sel=document.getElementById('timer-task-sel');
   sel.innerHTML='<option value="">— Link to a task (optional) —</option>'+tasks.filter(t=>!t.done).map(t=>`<option value="${t.id}">${escH(t.title)}</option>`).join('');
 }
-// request notification permission when visiting timer
 function onTimerTabOpen(){
   if(Notification&&Notification.permission==='default'){Notification.requestPermission();}
   const td=todayStr();
