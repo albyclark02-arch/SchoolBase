@@ -1278,7 +1278,7 @@ document.getElementById('mob-sidebar-btn').onclick=()=>{document.getElementById(
 document.getElementById('sidebar-overlay').onclick=()=>{document.getElementById('sidebar').classList.remove('mob-open');document.getElementById('sidebar-overlay').classList.remove('show');};
 
 // ════ WIRES ════
-document.getElementById('add-subj-btn').onclick=openAddSubjectModal;
+document.getElementById('add-subj-btn').onclick=()=>openAddSubjectModal();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeModal();}});
 
 // ════ RENDER ALL ════
