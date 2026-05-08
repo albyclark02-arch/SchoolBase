@@ -333,7 +333,64 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
 /* Streak fire wiggle */
 #streak-bar span:first-child{display:inline-block;animation:wiggle 2s ease-in-out infinite}
 
-::-webkit-scrollbar{width:5px;height:5px}
+/* ── FLASHCARDS ── */
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.fc-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px;cursor:pointer;min-height:120px;position:relative;transition:box-shadow .15s}
+.fc-card:hover{box-shadow:var(--shadow)}
+.fc-front,.fc-back{width:100%}
+.fc-back{display:none}
+.fc-card.flipped .fc-front{display:none}
+.fc-card.flipped .fc-back{display:block}
+.fc-q{font-size:13px;font-weight:500;color:var(--txt);line-height:1.5}
+.fc-a{font-size:13px;color:var(--acc);line-height:1.5}
+.fc-hint{font-size:10px;color:var(--txt3);margin-top:8px}
+.fc-del{position:absolute;top:8px;right:8px;background:none;border:none;cursor:pointer;font-size:12px;color:var(--txt3);opacity:0;font-family:var(--font)}
+.fc-card:hover .fc-del{opacity:1}
+#fc-study-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;backdrop-filter:blur(4px)}
+.fc-study-card{width:500px;max-width:90vw;min-height:200px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rx);padding:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;text-align:center;box-shadow:var(--shadow-lg);transition:transform .15s}
+.fc-study-card:hover{transform:scale(1.01)}
+.fc-study-q{font-size:22px;font-weight:600;color:var(--txt)}
+.fc-study-a{font-size:18px;color:var(--acc);font-weight:500;margin-top:8px}
+.fc-study-tap{font-size:12px;color:var(--txt3);margin-top:12px}
+.fc-study-btns{display:flex;gap:10px}
+.fc-study-btn{height:40px;padding:0 24px;border-radius:20px;border:none;cursor:pointer;font-size:14px;font-weight:500;font-family:var(--font)}
+
+/* ── PLANNER ── */
+.plan-day{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:16px;margin-bottom:10px}
+.plan-day-hd{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.plan-day-date{font-size:11px;color:var(--txt3);font-weight:400}
+.plan-item{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--txt)}
+.plan-item:last-child{border-bottom:none}
+.plan-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.plan-badge{font-size:11px;padding:2px 8px;border-radius:6px;background:var(--acc2);color:var(--acc);font-weight:500}
+.plan-time{font-size:11px;color:var(--txt3)}
+
+/* ── NOTES ── */
+#notes-editor:focus{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 12%,transparent)}
+
+/* ── INSIGHTS ── */
+.ins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;margin-bottom:20px}
+.ins-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.ins-card-val{font-size:36px;font-weight:700;color:var(--acc);line-height:1}
+.ins-card-lbl{font-size:12px;color:var(--txt3);margin-top:4px;font-weight:500}
+.ins-card-sub{font-size:11px;color:var(--txt3);margin-top:2px}
+.ins-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:16px}
+.ins-section-title{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:14px}
+.hm-grid{display:flex;gap:3px;flex-wrap:wrap}
+.hm-cell{width:13px;height:13px;border-radius:2px}
+.ins-weak-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.ins-weak-row:last-child{border-bottom:none}
+.ins-weak-bar-wrap{flex:1;background:var(--bg3);border-radius:10px;height:6px;overflow:hidden}
+.ins-weak-bar{height:100%;border-radius:10px}
+.ins-weak-pct{font-size:12px;font-weight:600;width:38px;text-align:right}
+
+/* ── AI CHAT ── */
+.ai-msg{max-width:78%;padding:10px 14px;border-radius:var(--rl);font-size:13px;line-height:1.65}
+.ai-msg.user{background:var(--acc);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.ai-msg.assistant{background:var(--bg2);border:1px solid var(--border);color:var(--txt);align-self:flex-start;border-bottom-left-radius:4px;white-space:pre-wrap}
+.ai-msg.thinking{background:var(--bg3);color:var(--txt3);align-self:flex-start;font-style:italic;font-size:12px}
+.ai-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border2);background:var(--bg3);color:var(--txt2);cursor:pointer;white-space:nowrap;font-family:var(--font);transition:background .12s}
+.ai-chip:hover{background:var(--acc2);color:var(--acc);border-color:var(--acc)}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 
@@ -366,7 +423,12 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
     <button class="nav-tab" data-tab="today">📅 <span class="nav-tab-label">Today</span></button>
     <button class="nav-tab" data-tab="calendar">🗓 <span class="nav-tab-label">Calendar</span></button>
     <button class="nav-tab" data-tab="timer">⏱ <span class="nav-tab-label">Timer</span></button>
+    <button class="nav-tab" data-tab="flashcards">🃏 <span class="nav-tab-label">Flashcards</span></button>
+    <button class="nav-tab" data-tab="planner">📆 <span class="nav-tab-label">Planner</span></button>
+    <button class="nav-tab" data-tab="notes">📝 <span class="nav-tab-label">Notes</span></button>
+    <button class="nav-tab" data-tab="insights">📊 <span class="nav-tab-label">Insights</span></button>
     <button class="nav-tab" data-tab="averages">📈 <span class="nav-tab-label">Averages</span></button>
+    <button class="nav-tab" data-tab="ai">🤖 <span class="nav-tab-label">AI Tutor</span></button>
     <button class="nav-tab" data-tab="completed">✅ <span class="nav-tab-label">Completed</span></button>
   </div>
   <div id="nav-right">
@@ -444,6 +506,70 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
       </div>
       <div class="timer-sessions">Sessions today: <span id="timer-sessions">0</span> 🔥</div>
     </div>
+
+    <!-- FLASHCARDS PANEL -->
+    <div id="flashcards-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="fc-header" style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+        <span style="font-size:15px;font-weight:600;color:var(--txt)">🃏 Flashcards</span>
+        <select id="fc-subj-sel" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--txt);font-family:var(--font);margin-left:8px"></select>
+        <button id="fc-add-btn" style="margin-left:auto;height:32px;padding:0 14px;border-radius:20px;background:var(--acc);color:#fff;border:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer">+ Add Card</button>
+        <button id="fc-study-btn" style="height:32px;padding:0 14px;border-radius:20px;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer">▶ Study Mode</button>
+      </div>
+      <div id="fc-content" style="flex:1;overflow-y:auto;padding:20px 24px"></div>
+    </div>
+
+    <!-- STUDY PLANNER PANEL -->
+    <div id="planner-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+        <span style="font-size:15px;font-weight:600;color:var(--txt)">📆 Study Planner</span>
+        <span style="font-size:13px;color:var(--txt3);margin-left:8px">Auto-generates a study schedule from your upcoming assessments</span>
+        <button id="planner-gen-btn" style="margin-left:auto;height:32px;padding:0 14px;border-radius:20px;background:var(--acc);color:#fff;border:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer">✨ Generate Plan</button>
+      </div>
+      <div id="planner-content" style="flex:1;overflow-y:auto;padding:20px 24px"></div>
+    </div>
+
+    <!-- NOTES PANEL -->
+    <div id="notes-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 24px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+        <span style="font-size:15px;font-weight:600;color:var(--txt)">📝 Notes</span>
+        <select id="notes-subj-sel" style="font-size:13px;padding:6px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--txt);font-family:var(--font);margin-left:8px"></select>
+        <button id="notes-save-btn" style="margin-left:auto;height:32px;padding:0 14px;border-radius:20px;background:var(--acc);color:#fff;border:none;font-size:12px;font-weight:500;font-family:var(--font);cursor:pointer">💾 Save</button>
+      </div>
+      <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;padding:16px 24px">
+        <textarea id="notes-editor" style="flex:1;resize:none;border:1px solid var(--border2);border-radius:var(--rl);background:var(--bg2);color:var(--txt);font-family:var(--font);font-size:14px;line-height:1.7;padding:16px;outline:none;transition:border-color .15s" placeholder="Write your notes here… (auto-saved per subject)"></textarea>
+      </div>
+    </div>
+
+    <!-- INSIGHTS PANEL -->
+    <div id="insights-panel" style="display:none;flex:1;overflow-y:auto;padding:24px"></div>
+
+    <!-- AI TUTOR PANEL -->
+    <div id="ai-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+      <div id="ai-setup" style="display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:16px;padding:40px">
+        <div style="font-size:40px">🤖</div>
+        <div style="font-size:18px;font-weight:600;color:var(--txt)">AI Study Assistant</div>
+        <div style="font-size:13px;color:var(--txt2);text-align:center;max-width:400px">Enter your Anthropic API key to unlock your personal AI tutor. It knows your subjects, tasks, grades and gives personalised study advice. Get a free key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--acc)">console.anthropic.com</a></div>
+        <div style="display:flex;gap:8px;width:100%;max-width:400px">
+          <input type="password" id="ai-key-input" placeholder="sk-ant-..." style="flex:1;font-size:13px;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--txt);font-family:var(--font)"/>
+          <button id="ai-key-save" style="height:38px;padding:0 16px;border-radius:var(--r);background:var(--acc);color:#fff;border:none;font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer">Connect</button>
+        </div>
+        <div style="font-size:11px;color:var(--txt3)">Your key is stored only in your browser, never sent anywhere except Anthropic.</div>
+      </div>
+      <div id="ai-chat-wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+        <div id="ai-chat-header" style="display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
+          <span style="font-size:13px;font-weight:600;color:var(--txt)">🤖 AI Study Assistant</span>
+          <div id="ai-suggestion-chips" style="display:flex;gap:6px;flex-wrap:wrap;flex:1;margin-left:8px"></div>
+          <button id="ai-clear-btn" style="font-size:11px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:var(--font)">Clear chat</button>
+          <button id="ai-disconnect-btn" style="font-size:11px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:var(--font)">Disconnect</button>
+        </div>
+        <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px"></div>
+        <div id="ai-input-row" style="display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--border);background:var(--bg2)">
+          <input type="text" id="ai-input" placeholder="Ask anything — quiz me, explain a topic, plan my study…" style="flex:1;font-size:13px;padding:9px 14px;border:1px solid var(--border2);border-radius:20px;background:var(--bg3);color:var(--txt);font-family:var(--font);outline:none"/>
+          <button id="ai-send-btn" style="height:38px;padding:0 18px;border-radius:20px;background:var(--acc);color:#fff;border:none;font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer">Send</button>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -1258,20 +1384,361 @@ function showModal(html){document.getElementById('modal-container').innerHTML=`<
 function closeModal(){document.getElementById('modal-container').innerHTML='';}
 
 // ════ TABS ════
+const ALL_PANELS=['hw-panel','cal-panel','avg-panel','timer-panel','flashcards-panel','planner-panel','notes-panel','insights-panel','ai-panel'];
 function switchTab(tab){
   activeTab=tab;
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));
-  const hp=document.getElementById('hw-panel'),cp=document.getElementById('cal-panel'),ap=document.getElementById('avg-panel'),tp=document.getElementById('timer-panel');
-  hp.style.display='none';cp.classList.remove('visible');ap.classList.remove('visible');tp.classList.remove('visible');
-  if(tab==='calendar'){cp.classList.add('visible');renderCalendar();}
-  else if(tab==='averages'){ap.classList.add('visible');renderAverages();}
-  else if(tab==='timer'){tp.classList.add('visible');populateTimerTasks();onTimerTabOpen();}
-  else{hp.style.display='flex';renderContent();}
+  ALL_PANELS.forEach(id=>{const el=document.getElementById(id);if(el){el.style.display='none';el.classList.remove('visible');}});
+  const show=id=>{const el=document.getElementById(id);if(el){el.style.display='flex';el.classList.add('visible');}};
+  if(tab==='calendar'){show('cal-panel');renderCalendar();}
+  else if(tab==='averages'){show('avg-panel');renderAverages();}
+  else if(tab==='timer'){show('timer-panel');populateTimerTasks();onTimerTabOpen();}
+  else if(tab==='flashcards'){show('flashcards-panel');renderFlashcards();}
+  else if(tab==='planner'){show('planner-panel');renderPlanner();}
+  else if(tab==='notes'){show('notes-panel');renderNotes();}
+  else if(tab==='insights'){show('insights-panel');renderInsights();}
+  else if(tab==='ai'){show('ai-panel');initAI();}
+  else{show('hw-panel');renderContent();}
 }
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 
+// ════ FLASHCARDS ════
+let flashcards=load('hw_flashcards',[]);
+function saveFC(){store('hw_flashcards',flashcards);showToast('✓ Saved');}
+
+function renderFlashcards(){
+  const sel=document.getElementById('fc-subj-sel');
+  sel.innerHTML='<option value="all">All Subjects</option>'+subjects.map(s=>`<option value="${s.id}">${escH(s.name)}</option>`).join('');
+  renderFCGrid();
+}
+function renderFCGrid(){
+  const sid=document.getElementById('fc-subj-sel').value;
+  const cards=sid==='all'?flashcards:flashcards.filter(c=>c.subjectId===sid);
+  const area=document.getElementById('fc-content');
+  if(!cards.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">🃏</div><div class="e-title">No flashcards yet</div><div class="e-sub">Add cards to start studying smarter!</div></div>`;return;}
+  area.innerHTML=`<div class="fc-grid">${cards.map(c=>{
+    const subj=subjects.find(s=>s.id===c.subjectId)||{color:'#aaa'};
+    return`<div class="fc-card" data-fcid="${c.id}" style="border-top:3px solid ${subj.color}">
+      <button class="fc-del" data-fcdel="${c.id}">✕</button>
+      <div class="fc-front"><div class="fc-q">${escH(c.q)}</div><div class="fc-hint">Click to reveal</div></div>
+      <div class="fc-back"><div class="fc-a">${escH(c.a)}</div></div>
+    </div>`;
+  }).join('')}</div>`;
+  area.querySelectorAll('.fc-card[data-fcid]').forEach(el=>el.addEventListener('click',e=>{if(e.target.dataset.fcdel)return;el.classList.toggle('flipped');}));
+  area.querySelectorAll('[data-fcdel]').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();flashcards=flashcards.filter(c=>c.id!==el.dataset.fcdel);saveFC();renderFCGrid();}));
+}
+document.getElementById('fc-subj-sel').addEventListener('change',renderFCGrid);
+document.getElementById('fc-add-btn').onclick=()=>{
+  const opts=subjects.map(s=>`<option value="${s.id}">${escH(s.name)}</option>`).join('');
+  showModal(`<div class="modal-title">Add Flashcard</div>
+    <div class="modal-field"><label class="modal-label">Subject</label><select class="modal-input" id="fc-s-sel">${opts}</select></div>
+    <div class="modal-field"><label class="modal-label">Question / Front</label><textarea class="modal-input" id="fc-q-in" style="height:80px;resize:vertical" placeholder="e.g. What is photosynthesis?"></textarea></div>
+    <div class="modal-field"><label class="modal-label">Answer / Back</label><textarea class="modal-input" id="fc-a-in" style="height:80px;resize:vertical" placeholder="e.g. The process by which plants…"></textarea></div>
+    <div class="modal-btns"><button class="modal-btn" id="fc-c">Cancel</button><button class="modal-btn primary" id="fc-sv">Add Card</button></div>`);
+  document.getElementById('fc-c').onclick=closeModal;
+  document.getElementById('fc-sv').onclick=()=>{
+    const q=document.getElementById('fc-q-in').value.trim(),a=document.getElementById('fc-a-in').value.trim(),sid=document.getElementById('fc-s-sel').value;
+    if(!q||!a)return;
+    flashcards.push({id:'fc'+uid(),q,a,subjectId:sid});
+    saveFC();closeModal();renderFCGrid();
+  };
+};
+document.getElementById('fc-study-btn').onclick=()=>{
+  const sid=document.getElementById('fc-subj-sel').value;
+  let cards=sid==='all'?[...flashcards]:[...flashcards.filter(c=>c.subjectId===sid)];
+  if(!cards.length){showToast('⚠️ No cards to study!');return;}
+  // shuffle
+  cards.sort(()=>Math.random()-.5);
+  let idx=0,revealed=false;
+  const overlay=document.createElement('div');overlay.id='fc-study-overlay';
+  function render(){
+    const c=cards[idx];
+    const subj=subjects.find(s=>s.id===c.subjectId)||{name:'?'};
+    overlay.innerHTML=`<div style="font-size:14px;color:#fff;opacity:.7">${idx+1} / ${cards.length} · ${escH(subj.name)}</div>
+      <div class="fc-study-card" id="fc-sc">
+        <div>
+          ${!revealed?`<div class="fc-study-q">${escH(c.q)}</div><div class="fc-study-tap">👆 Tap to reveal answer</div>`
+            :`<div class="fc-study-q" style="font-size:14px;opacity:.7;margin-bottom:8px">${escH(c.q)}</div><div class="fc-study-a">${escH(c.a)}</div>`}
+        </div>
+      </div>
+      ${revealed?`<div class="fc-study-btns">
+        <button class="fc-study-btn" id="fc-wrong" style="background:var(--red-bg);color:var(--red)">😕 Still learning</button>
+        <button class="fc-study-btn" id="fc-right" style="background:var(--green-bg);color:var(--green)">✓ Got it!</button>
+      </div>`:'<div style="color:#fff;opacity:.5;font-size:12px">Click card to reveal</div>'}
+      <button id="fc-exit" style="background:none;border:1px solid rgba(255,255,255,.3);color:#fff;padding:7px 16px;border-radius:20px;cursor:pointer;font-size:12px;font-family:var(--font)">✕ Exit</button>`;
+    document.getElementById('fc-sc').onclick=()=>{if(!revealed){revealed=true;render();}};
+    const wb=document.getElementById('fc-wrong'),gb=document.getElementById('fc-right');
+    if(wb)wb.onclick=()=>{revealed=false;idx=(idx+1)%cards.length;render();};
+    if(gb)gb.onclick=()=>{revealed=false;idx++;if(idx>=cards.length){overlay.remove();launchConfetti();showToast('🎉 All cards done! Great work!');return;}render();};
+    document.getElementById('fc-exit').onclick=()=>overlay.remove();
+  }
+  render();
+  document.body.appendChild(overlay);
+};
+
+// ════ STUDY PLANNER ════
+function renderPlanner(){
+  const area=document.getElementById('planner-content');
+  const upcoming=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)>=0&&daysUntil(t.dueDate)<=21).sort((a,b)=>a.dueDate<b.dueDate?-1:1);
+  if(!upcoming.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">📆</div><div class="e-title">No upcoming tasks</div><div class="e-sub">Add homework to generate a study plan!</div></div>`;return;}
+  area.innerHTML=`<div style="font-size:13px;color:var(--txt2);margin-bottom:16px">Auto-generated plan based on your ${upcoming.length} upcoming tasks. Click ✨ Generate Plan to refresh.</div>
+  <div id="plan-days"></div>`;
+}
+document.getElementById('planner-gen-btn').onclick=()=>{
+  const area=document.getElementById('planner-content');
+  const upcoming=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)>=0&&daysUntil(t.dueDate)<=21).sort((a,b)=>a.dueDate<b.dueDate?-1:1);
+  if(!upcoming.length){area.innerHTML=`<div class="empty-state"><div class="e-icon">📆</div><div class="e-title">No upcoming tasks</div></div>`;return;}
+  // Build plan: spread study sessions across days before each due date
+  const planMap={};
+  upcoming.forEach(t=>{
+    const days=Math.max(1,daysUntil(t.dueDate));
+    const sessions=t.isAssessment?Math.min(days,5):Math.min(days,2);
+    for(let i=1;i<=sessions;i++){
+      const d=new Date(todayStr()+'T00:00:00');
+      d.setDate(d.getDate()+Math.max(0,days-i));
+      const ds=d.toISOString().slice(0,10);
+      if(!planMap[ds])planMap[ds]=[];
+      planMap[ds].push({task:t,session:i,total:sessions});
+    }
+  });
+  const days=Object.keys(planMap).sort();
+  const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html='';
+  days.forEach(ds=>{
+    const d=new Date(ds+'T00:00:00');
+    const isToday=ds===todayStr();
+    const subj=planMap[ds];
+    html+=`<div class="plan-day" style="${isToday?'border-color:var(--acc);border-width:1.5px':''}">
+      <div class="plan-day-hd">${isToday?'📍 Today':'📅 '+DAYS[d.getDay()]} <span class="plan-day-date">${fmtShort(ds)}</span></div>
+      ${subj.map(({task,session,total})=>{
+        const s=subjects.find(x=>x.id===task.subjectId)||{name:'?',color:'#aaa'};
+        return`<div class="plan-item">
+          <div class="plan-dot" style="background:${s.color}"></div>
+          <span style="flex:1">${escH(task.title)}</span>
+          <span class="plan-badge">${task.isAssessment?'📄 Assess':'📖 Study'} ${session}/${total}</span>
+          <span class="plan-time">${task.timeEst?`~${(task.timeEst/total).toFixed(1)}h`:''}</span>
+        </div>`;}).join('')}
+    </div>`;
+  });
+  area.innerHTML=`<div style="font-size:13px;color:var(--txt2);margin-bottom:16px">Plan for ${days.length} study days across ${upcoming.length} tasks.</div>${html}`;
+  showToast('✨ Study plan generated!');
+};
+
+// ════ NOTES ════
+let notes=load('hw_notes',{});
+function renderNotes(){
+  const sel=document.getElementById('notes-subj-sel');
+  sel.innerHTML=subjects.map(s=>`<option value="${s.id}">${escH(s.name)}</option>`).join('');
+  loadNoteForSubject();
+}
+function loadNoteForSubject(){
+  const sid=document.getElementById('notes-subj-sel').value;
+  document.getElementById('notes-editor').value=notes[sid]||'';
+}
+document.getElementById('notes-subj-sel').addEventListener('change',loadNoteForSubject);
+document.getElementById('notes-save-btn').onclick=()=>{
+  const sid=document.getElementById('notes-subj-sel').value;
+  notes[sid]=document.getElementById('notes-editor').value;
+  store('hw_notes',notes);showToast('✓ Notes saved');
+};
+// auto-save on typing
+let _noteTimer=null;
+document.getElementById('notes-editor').addEventListener('input',()=>{
+  if(_noteTimer)clearTimeout(_noteTimer);
+  _noteTimer=setTimeout(()=>{
+    const sid=document.getElementById('notes-subj-sel').value;
+    if(sid){notes[sid]=document.getElementById('notes-editor').value;store('hw_notes',notes);}
+  },1000);
+});
+
+// ════ INSIGHTS ════
+function renderInsights(){
+  const panel=document.getElementById('insights-panel');
+  const done=tasks.filter(t=>t.done);
+  const overdue=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<0);
+  const assess=tasks.filter(t=>t.isAssessment&&t.done&&t.grade!=null);
+  const avgGrade=assess.length?Math.round(assess.reduce((a,t)=>a+t.grade,0)/assess.length):null;
+  // streak
+  const streak=streakData.streak||0;
+  // heatmap: last 10 weeks
+  const heatData={};
+  tasks.filter(t=>t.done&&t.completedAt).forEach(t=>{heatData[t.completedAt]=(heatData[t.completedAt]||0)+1;});
+  let hmHtml='';
+  for(let i=69;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    const count=heatData[ds]||0;
+    const opacity=count===0?0:count===1?.35:count<=3?.6:.85;
+    hmHtml+=`<div class="hm-cell" style="background:${count?`color-mix(in srgb,var(--acc) ${Math.round(opacity*100)}%,var(--bg3))`:'var(--bg3)'}" title="${ds}: ${count} task${count!==1?'s':''}"></div>`;
+  }
+  // subject weaknesses
+  const subjectAvgs=subjects.map(s=>{
+    const sa=tasks.filter(t=>t.subjectId===s.id&&t.isAssessment&&t.done&&t.grade!=null);
+    return{...s,avg:sa.length?Math.round(sa.reduce((a,t)=>a+t.grade,0)/sa.length):null,count:sa.length};
+  }).filter(s=>s.avg!==null).sort((a,b)=>a.avg-b.avg);
+  // study sessions
+  const totalFC=flashcards.length;
+  // time invested
+  const totalTime=tasks.filter(t=>t.done&&t.timeEst).reduce((a,t)=>a+(t.timeEst||0),0);
+  panel.innerHTML=`
+    <div class="ins-grid">
+      <div class="ins-card"><div class="ins-card-val">${done.length}</div><div class="ins-card-lbl">Tasks Completed</div></div>
+      <div class="ins-card"><div class="ins-card-val">${streak}🔥</div><div class="ins-card-lbl">Day Streak</div></div>
+      <div class="ins-card"><div class="ins-card-val" style="${overdue.length?'color:var(--red)':''}">${overdue.length}</div><div class="ins-card-lbl">Overdue</div></div>
+      <div class="ins-card"><div class="ins-card-val">${avgGrade!=null?avgGrade+'%':'—'}</div><div class="ins-card-lbl">Average Grade</div></div>
+      <div class="ins-card"><div class="ins-card-val">${totalFC}</div><div class="ins-card-lbl">Flashcards Created</div></div>
+      <div class="ins-card"><div class="ins-card-val">${totalTime>0?totalTime+'h':'—'}</div><div class="ins-card-lbl">Study Hours Logged</div></div>
+    </div>
+    <div class="ins-section">
+      <div class="ins-section-title">📅 Activity — last 10 weeks</div>
+      <div class="hm-grid">${hmHtml}</div>
+      <div style="font-size:11px;color:var(--txt3);margin-top:8px">Each cell = 1 day · darker = more tasks completed</div>
+    </div>
+    ${subjectAvgs.length?`<div class="ins-section">
+      <div class="ins-section-title">🎯 Subject Performance</div>
+      ${subjectAvgs.map(s=>{const gi=gradeInfo(s.avg);return`<div class="ins-weak-row">
+        <div style="width:10px;height:10px;border-radius:50%;background:${s.color};flex-shrink:0"></div>
+        <span style="font-size:13px;color:var(--txt);width:100px">${escH(s.name)}</span>
+        <div class="ins-weak-bar-wrap"><div class="ins-weak-bar" style="width:${s.avg}%;background:${s.avg>=70?'var(--green)':s.avg>=50?'var(--yellow)':'var(--red)'}"></div></div>
+        <span class="ins-weak-pct" style="color:${gi.color}">${s.avg}%</span>
+        <span style="font-size:11px;padding:2px 8px;border-radius:6px;background:${gi.bg};color:${gi.color}">${gi.label}</span>
+      </div>`;}).join('')}
+    </div>`:''}
+    <div class="ins-section">
+      <div class="ins-section-title">💡 Smart Recommendations</div>
+      ${buildRecommendations()}
+    </div>`;
+}
+
+function buildRecommendations(){
+  const recs=[];
+  const overdue=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<0);
+  if(overdue.length)recs.push({icon:'🚨',text:`You have <strong>${overdue.length} overdue task${overdue.length>1?'s':''}</strong> — tackle these first!`,color:'var(--red)'});
+  const soon=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)>=0&&daysUntil(t.dueDate)<=2);
+  if(soon.length)recs.push({icon:'⚡',text:`<strong>${soon.length} task${soon.length>1?'s':''}</strong> due in the next 2 days — don't leave them too late!`,color:'var(--yellow)'});
+  const assess=tasks.filter(t=>t.isAssessment&&t.done&&t.grade!=null);
+  if(assess.length){
+    const subjectAvgs=subjects.map(s=>{const sa=assess.filter(t=>t.subjectId===s.id);return{...s,avg:sa.length?Math.round(sa.reduce((a,t)=>a+t.grade,0)/sa.length):null};}).filter(s=>s.avg!==null&&s.avg<70);
+    subjectAvgs.forEach(s=>recs.push({icon:'📚',text:`Your <strong>${escH(s.name)}</strong> average is <strong>${s.avg}%</strong> — consider extra revision and flashcard practice.`,color:'var(--acc)'}));
+  }
+  if(flashcards.length===0)recs.push({icon:'🃏',text:'No flashcards yet! Creating flashcards is one of the best ways to study — head to the Flashcards tab.',color:'var(--acc)'});
+  if(streakData.streak>=3)recs.push({icon:'🔥',text:`Amazing! You're on a <strong>${streakData.streak}-day streak</strong>. Keep it going!`,color:'var(--green)'});
+  if(!recs.length)recs.push({icon:'🌟',text:'Everything looks great! Keep up the great work and stay on top of your tasks.',color:'var(--green)'});
+  return recs.map(r=>`<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--txt)"><span style="font-size:18px">${r.icon}</span><span style="line-height:1.5">${r.text}</span></div>`).join('');
+}
+
+// ════ AI ASSISTANT ════
+let aiKey=load('hw_aikey','');
+let aiHistory=[];
+function initAI(){
+  if(aiKey){
+    document.getElementById('ai-setup').style.display='none';
+    document.getElementById('ai-chat-wrap').style.display='flex';
+    updateAIChips();
+    if(!aiHistory.length)addAIWelcome();
+  }else{
+    document.getElementById('ai-setup').style.display='flex';
+    document.getElementById('ai-chat-wrap').style.display='none';
+  }
+}
+document.getElementById('ai-key-save').onclick=()=>{
+  const k=document.getElementById('ai-key-input').value.trim();
+  if(!k.startsWith('sk-')){showToast('⚠️ That doesn\'t look like an API key');return;}
+  aiKey=k;store('hw_aikey',aiKey);initAI();
+};
+document.getElementById('ai-disconnect-btn').onclick=()=>{aiKey='';aiHistory=[];store('hw_aikey','');initAI();};
+document.getElementById('ai-clear-btn').onclick=()=>{aiHistory=[];document.getElementById('ai-messages').innerHTML='';addAIWelcome();};
+
+function addAIWelcome(){
+  const overdue=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<0).length;
+  const soon=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<=2&&!t.done).length;
+  let greeting=`Hey! I'm your AI study assistant 👋\n\nI can see your ${tasks.filter(t=>!t.done).length} pending tasks across ${subjects.length} subjects.`;
+  if(overdue)greeting+=`\n\n⚠️ You have ${overdue} overdue task${overdue>1?'s':''}!`;
+  if(soon)greeting+=`\n⚡ ${soon} task${soon>1?'s':''} due very soon.`;
+  greeting+='\n\nHow can I help you study today?';
+  appendAIMsg('assistant',greeting);
+}
+
+function updateAIChips(){
+  const chips=[
+    '📅 What should I study tonight?',
+    '🧠 Quiz me on my weakest subject',
+    '📝 Help me plan my essay',
+    '💡 Explain a concept',
+    '📊 How are my grades trending?',
+  ];
+  document.getElementById('ai-suggestion-chips').innerHTML=chips.map(c=>`<button class="ai-chip">${c}</button>`).join('');
+  document.querySelectorAll('.ai-chip').forEach(btn=>{
+    btn.addEventListener('click',()=>{document.getElementById('ai-input').value=btn.textContent;sendAI();});
+  });
+}
+
+function appendAIMsg(role,text){
+  const div=document.createElement('div');
+  div.className=`ai-msg ${role}`;
+  div.textContent=text;
+  document.getElementById('ai-messages').appendChild(div);
+  document.getElementById('ai-messages').scrollTop=999999;
+  return div;
+}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-input');
+  const msg=inp.value.trim();if(!msg)return;
+  inp.value='';
+  appendAIMsg('user',msg);
+  aiHistory.push({role:'user',content:msg});
+  const thinking=appendAIMsg('thinking','✦ Thinking…');
+
+  // Build context about the student
+  const overdueTasks=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<0);
+  const upcomingTasks=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)>=0&&daysUntil(t.dueDate)<=7);
+  const assessTasks=tasks.filter(t=>t.isAssessment&&t.done&&t.grade!=null);
+  const subjectSummary=subjects.map(s=>{
+    const pending=tasks.filter(t=>t.subjectId===s.id&&!t.done).length;
+    const grades=assessTasks.filter(t=>t.subjectId===s.id).map(t=>t.grade);
+    const avg=grades.length?Math.round(grades.reduce((a,b)=>a+b,0)/grades.length):null;
+    return`${s.name}: ${pending} pending tasks${avg!==null?`, avg grade ${avg}%`:''}`;
+  }).join('\n');
+
+  const systemPrompt=`You are a friendly, encouraging AI study assistant built into SchoolBase, a homework and study tracking app. You are talking to a student.
+
+Student's current data:
+Subjects: ${subjects.map(s=>s.name).join(', ')}
+${subjectSummary}
+Overdue tasks: ${overdueTasks.map(t=>t.title).join(', ')||'none'}
+Due this week: ${upcomingTasks.map(t=>`${t.title} (${fmtShort(t.dueDate)})`).join(', ')||'none'}
+Day streak: ${streakData.streak}
+Completed tasks total: ${tasks.filter(t=>t.done).length}
+Flashcards created: ${flashcards.length}
+
+Be concise, warm and motivating. Give practical, specific advice. If asked to quiz them, provide questions one at a time. Keep responses under 200 words unless generating a detailed study plan.`;
+
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:systemPrompt,messages:aiHistory})
+    });
+    const data=await resp.json();
+    thinking.remove();
+    if(data.error){appendAIMsg('assistant',`❌ Error: ${data.error.message}`);return;}
+    const reply=data.content[0].text;
+    appendAIMsg('assistant',reply);
+    aiHistory.push({role:'assistant',content:reply});
+    // keep history manageable
+    if(aiHistory.length>20)aiHistory=aiHistory.slice(-20);
+  }catch(e){
+    thinking.remove();
+    appendAIMsg('assistant','❌ Couldn\'t connect. Check your API key and internet connection.');
+  }
+}
+
+document.getElementById('ai-send-btn').onclick=sendAI;
+document.getElementById('ai-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAI();}});
+
 // ════ SEARCH ════
-document.getElementById('search-input').addEventListener('input',e=>{searchQ=e.target.value.trim();if(activeTab!=='calendar'&&activeTab!=='averages'&&activeTab!=='timer')renderContent();});
+document.getElementById('search-input').addEventListener('input',e=>{searchQ=e.target.value.trim();if(['all','today','completed'].includes(activeTab))renderContent();});
 
 // ════ MOBILE ════
 document.getElementById('mob-sidebar-btn').onclick=()=>{document.getElementById('sidebar').classList.toggle('mob-open');document.getElementById('sidebar-overlay').classList.toggle('show');};
@@ -1282,7 +1749,18 @@ document.getElementById('add-subj-btn').onclick=()=>openAddSubjectModal();
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();closeModal();}});
 
 // ════ RENDER ALL ════
-function renderAll(){renderSidebar();if(activeTab==='calendar')renderCalendar();else if(activeTab==='averages')renderAverages();else if(activeTab==='timer'){populateTimerTasks();}else renderContent();}
+function renderAll(){
+  renderSidebar();
+  if(activeTab==='calendar')renderCalendar();
+  else if(activeTab==='averages')renderAverages();
+  else if(activeTab==='timer')populateTimerTasks();
+  else if(activeTab==='flashcards')renderFlashcards();
+  else if(activeTab==='planner')renderPlanner();
+  else if(activeTab==='notes')renderNotes();
+  else if(activeTab==='insights')renderInsights();
+  else if(activeTab==='ai')initAI();
+  else renderContent();
+}
 
 // ════ BOOT ════
 renderAll();
