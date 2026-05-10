@@ -599,7 +599,21 @@ let subjectTargets = load('hw_targets', {});
 let timerSessions = load('hw_timer_sessions_today', {date:'',count:0});
 let streakData = load('hw_streak', {date:'',streak:0});
 
-function saveAll(){store('hw_subjects',subjects);store('hw_tasks',tasks);store('hw_cal_events',calEvents);showToast('✓ Saved')}
+function saveAll(){
+  store('hw_subjects',subjects);
+  store('hw_tasks',tasks);
+  store('hw_cal_events',calEvents);
+  store('hw_flashcards',flashcards);
+  store('hw_notes',notes);
+  store('hw_targets',subjectTargets);
+  store('hw_streak',streakData);
+  // also save a full snapshot as redundant backup
+  try{
+    const snap={subjects,tasks,calEvents,flashcards,notes,subjectTargets,streakData,savedAt:new Date().toISOString()};
+    localStorage.setItem('hw_snapshot',JSON.stringify(snap));
+  }catch{}
+  showToast('✓ Saved');
+}
 function saveTheme(){store('hw_theme2',themeStore)}
 function saveTargets(){store('hw_targets',subjectTargets)}
 
@@ -735,7 +749,7 @@ document.getElementById('dark-toggle').onclick=()=>{
 // App name display
 document.getElementById('app-name-display').textContent=appName;
 document.getElementById('nav-brand').onclick=()=>{};
-document.getElementById('settings-btn').onclick=()=>openThemePicker();
+document.getElementById('settings-btn').onclick=()=>openSettingsModal();
 
 // Theme picker
 document.getElementById('theme-btn').onclick=openThemePicker;
@@ -1721,7 +1735,81 @@ Be concise, warm and motivating. Give practical, specific advice. If asked to qu
 document.getElementById('ai-send-btn').onclick=sendAI;
 document.getElementById('ai-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAI();}});
 
-// ════ SEARCH ════
+// ════ SETTINGS & BACKUP ════
+function openSettingsModal(){
+  showModal(`<div class="modal-title">⚙️ Settings & Backup</div>
+    <p style="font-size:13px;color:var(--txt2);margin-bottom:16px;line-height:1.6">Your data is saved in your browser. Use <strong>Export</strong> to save a backup file, and <strong>Import</strong> to restore it on any device or after a reset.</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="modal-btn primary" id="exp-btn" style="justify-content:center;display:flex;align-items:center;gap:6px">⬇️ Export / Download Backup</button>
+      <label class="modal-btn" style="justify-content:center;display:flex;align-items:center;gap:6px;cursor:pointer">
+        ⬆️ Import / Restore Backup
+        <input type="file" id="imp-file" accept=".json" style="display:none"/>
+      </label>
+      <button class="modal-btn" id="theme-from-settings" style="justify-content:center;display:flex;align-items:center;gap:6px">🎨 Change Theme</button>
+    </div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="font-size:11px;color:var(--txt3);margin-bottom:8px;font-weight:600;letter-spacing:.05em;text-transform:uppercase">Danger Zone</div>
+      <button class="modal-btn danger" id="clear-btn" style="width:100%;justify-content:center;display:flex">🗑 Clear All Data</button>
+    </div>
+    <div class="modal-btns"><button class="modal-btn" id="set-close">Close</button></div>`);
+
+  document.getElementById('set-close').onclick=closeModal;
+  document.getElementById('theme-from-settings').onclick=()=>{closeModal();openThemePicker();};
+
+  // Export
+  document.getElementById('exp-btn').onclick=()=>{
+    const backup={
+      subjects, tasks, calEvents, flashcards, notes,
+      subjectTargets, streakData, themeStore,
+      exportedAt: new Date().toISOString(),
+      version: 1
+    };
+    const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download=`schoolbase-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    showToast('✓ Backup downloaded!');
+  };
+
+  // Import
+  document.getElementById('imp-file').onchange=(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      try{
+        const backup=JSON.parse(ev.target.result);
+        if(backup.subjects)subjects=backup.subjects;
+        if(backup.tasks)tasks=backup.tasks;
+        if(backup.calEvents)calEvents=backup.calEvents;
+        if(backup.flashcards)flashcards=backup.flashcards;
+        if(backup.notes)notes=backup.notes;
+        if(backup.subjectTargets)subjectTargets=backup.subjectTargets;
+        if(backup.streakData)streakData=backup.streakData;
+        if(backup.themeStore){themeStore=backup.themeStore;applyTheme(themeStore);}
+        saveAll();store('hw_flashcards',flashcards);store('hw_notes',notes);store('hw_targets',subjectTargets);store('hw_streak',streakData);
+        closeModal();renderAll();
+        showToast('✓ Data restored successfully!');
+      }catch(err){
+        showToast('❌ Invalid backup file');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Clear all
+  document.getElementById('clear-btn').onclick=()=>{
+    showModal(`<div class="modal-title">Clear All Data?</div>
+      <p style="font-size:13px;color:var(--txt2);margin-bottom:6px">This will permanently delete all your subjects, tasks, flashcards, notes and grades. This cannot be undone.</p>
+      <div class="modal-btns"><button class="modal-btn" id="cc">Cancel</button><button class="modal-btn danger" id="cd">Yes, delete everything</button></div>`);
+    document.getElementById('cc').onclick=closeModal;
+    document.getElementById('cd').onclick=()=>{
+      subjects=DS;tasks=[];calEvents=[];flashcards=[];notes={};subjectTargets={};
+      saveAll();store('hw_flashcards',[]);store('hw_notes',{});store('hw_targets',{});
+      closeModal();renderAll();showToast('✓ All data cleared');
+    };
+  };
+}
 document.getElementById('search-input').addEventListener('input',e=>{searchQ=e.target.value.trim();if(['all','today','completed'].includes(activeTab))renderContent();});
 
 // ════ MOBILE ════
@@ -1747,6 +1835,27 @@ function renderAll(){
 }
 
 // ════ BOOT ════
+// Try to recover from snapshot if data looks missing
+(function recoverIfNeeded(){
+  try{
+    if(subjects.length===0||tasks.length===0){
+      const snap=localStorage.getItem('hw_snapshot');
+      if(snap){
+        const s=JSON.parse(snap);
+        if(s.subjects&&s.subjects.length>0){
+          if(s.subjects)subjects=s.subjects;
+          if(s.tasks)tasks=s.tasks;
+          if(s.calEvents)calEvents=s.calEvents;
+          if(s.flashcards)flashcards=s.flashcards;
+          if(s.notes)notes=s.notes;
+          if(s.subjectTargets)subjectTargets=s.subjectTargets;
+          if(s.streakData)streakData=s.streakData;
+          console.log('SchoolBase: recovered from snapshot');
+        }
+      }
+    }
+  }catch{}
+})();
 renderAll();
 checkNotifications();
 </script>
