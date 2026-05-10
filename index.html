@@ -547,11 +547,28 @@ textarea.modal-input{height:64px;resize:vertical;line-height:1.5;font-size:13px}
 
     <!-- AI TUTOR PANEL -->
     <div id="ai-panel" style="display:none;flex-direction:column;flex:1;overflow:hidden">
-      <div id="ai-chat-wrap" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
+      <!-- Setup screen (shown when no API key) -->
+      <div id="ai-setup" style="display:none;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:18px;padding:40px;text-align:center">
+        <div style="font-size:48px">🤖</div>
+        <div style="font-size:20px;font-weight:600;color:var(--txt)">AI Study Assistant</div>
+        <div style="font-size:13px;color:var(--txt2);max-width:420px;line-height:1.7">
+          Your personal AI tutor — it knows your subjects, tasks and grades and gives you personalised study advice, quizzes you, explains concepts and more.<br><br>
+          To use it, you need a free Anthropic API key.<br>
+          Get one in 30 seconds at <a href="https://console.anthropic.com" target="_blank" style="color:var(--acc);font-weight:500">console.anthropic.com</a> → then paste it below.
+        </div>
+        <div style="display:flex;gap:8px;width:100%;max-width:420px">
+          <input type="password" id="ai-key-input" placeholder="sk-ant-api03-..." style="flex:1;font-size:13px;padding:10px 14px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg3);color:var(--txt);font-family:var(--font);outline:none"/>
+          <button id="ai-key-save" style="height:40px;padding:0 18px;border-radius:var(--r);background:var(--acc);color:#fff;border:none;font-size:13px;font-weight:500;font-family:var(--font);cursor:pointer;white-space:nowrap">Connect →</button>
+        </div>
+        <div style="font-size:11px;color:var(--txt3);max-width:360px">🔒 Your key is stored only in your browser's local storage — it never leaves your device except to talk directly to Anthropic.</div>
+      </div>
+      <!-- Chat (shown when key is saved) -->
+      <div id="ai-chat-wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden">
         <div id="ai-chat-header" style="display:flex;align-items:center;gap:10px;padding:10px 20px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0">
           <span style="font-size:13px;font-weight:600;color:var(--txt)">🤖 AI Study Assistant</span>
           <div id="ai-suggestion-chips" style="display:flex;gap:6px;flex-wrap:wrap;flex:1;margin-left:8px"></div>
-          <button id="ai-clear-btn" style="font-size:11px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:var(--font)">Clear chat</button>
+          <button id="ai-clear-btn" style="font-size:11px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:var(--font);padding:4px 8px;border-radius:6px" title="Clear chat">🗑 Clear</button>
+          <button id="ai-disconnect-btn" style="font-size:11px;color:var(--txt3);background:none;border:none;cursor:pointer;font-family:var(--font);padding:4px 8px;border-radius:6px" title="Remove API key">🔌 Disconnect</button>
         </div>
         <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px"></div>
         <div id="ai-input-row" style="display:flex;gap:8px;padding:12px 20px;border-top:1px solid var(--border);background:var(--bg2)">
@@ -1620,12 +1637,27 @@ function buildRecommendations(){
 
 // ════ AI ASSISTANT ════
 let aiHistory=[];
+let aiKey=load('hw_aikey','');
+
 function initAI(){
-  document.getElementById('ai-chat-wrap').style.display='flex';
-  updateAIChips();
-  if(!aiHistory.length)addAIWelcome();
+  if(aiKey){
+    document.getElementById('ai-setup').style.display='none';
+    document.getElementById('ai-chat-wrap').style.display='flex';
+    updateAIChips();
+    if(!aiHistory.length)addAIWelcome();
+  }else{
+    document.getElementById('ai-setup').style.display='flex';
+    document.getElementById('ai-chat-wrap').style.display='none';
+  }
 }
+
+document.getElementById('ai-key-save').onclick=()=>{
+  const k=document.getElementById('ai-key-input').value.trim();
+  if(!k.startsWith('sk-')){showToast('⚠️ That doesn\'t look like a valid API key');return;}
+  aiKey=k; store('hw_aikey',aiKey); initAI(); showToast('✓ Connected!');
+};
 document.getElementById('ai-clear-btn').onclick=()=>{aiHistory=[];document.getElementById('ai-messages').innerHTML='';addAIWelcome();};
+document.getElementById('ai-disconnect-btn').onclick=()=>{aiKey='';aiHistory=[];store('hw_aikey','');initAI();};
 
 function addAIWelcome(){
   const overdue=tasks.filter(t=>!t.done&&daysUntil(t.dueDate)<0).length;
@@ -1695,7 +1727,7 @@ Be concise, warm and motivating. Give practical, specific advice. If asked to qu
   try{
     const resp=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,system:systemPrompt,messages:aiHistory})
     });
     const data=await resp.json();
